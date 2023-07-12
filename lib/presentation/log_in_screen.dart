@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -43,19 +41,24 @@ class LoginPageStateState extends ConsumerState<LoginPage> {
                 child: Column(
                   children: [
                     FormBuilderTextField(
+                      key: _formKey,
                       name: email,
                       autofillHints: const [AutofillHints.email],
-                      onSubmitted: (value) => _submit(),
-                      validator: FormBuilderValidators.email(),
+                      validator: FormBuilderValidators.compose([
+                        FormBuilderValidators.required(),
+                        FormBuilderValidators.email(),
+                      ]),
+                      keyboardType: TextInputType.emailAddress,
                       decoration: const InputDecoration(
                         hintText: 'Email',
                       ),
                     ),
+                    //widget je obican model podatka, tako da mu stavim key kao poveznicu izmedu render i widget three-a, element povezuje render three s widgetom i svaki widget onda moze dobit preko elementa
                     FormBuilderTextField(
+                      key: _formKey,
                       obscureText: true,
                       autofillHints: const [AutofillHints.password],
                       name: password,
-                      onSubmitted: (value) => _submit(),
                       validator: FormBuilderValidators.required(),
                       decoration: const InputDecoration(
                         hintText: 'Password',
@@ -65,10 +68,13 @@ class LoginPageStateState extends ConsumerState<LoginPage> {
                       padding: const EdgeInsets.only(top: 48.0),
                       child: ElevatedButton(
                         onPressed: () {
-                          AutoRouter.of(context).pop();
-                          ref.read(signInFormNotifierProvider.notifier);
-
-                          log(signInFormNotifierProvider.toString());
+                          FocusScope.of(context).unfocus();
+                          _formKey.currentState?.saveAndValidate();
+                          if (_formKey.currentState?.isValid == true) {
+                            ref
+                                .read(signInFormNotifierProvider.notifier)
+                                .submit(_formKey.currentState);
+                          }
                         },
                         child: const Text('Login'),
                       ),
@@ -104,13 +110,13 @@ class LoginPageStateState extends ConsumerState<LoginPage> {
   //   return null;
   // }
 
-  void _submit() {
-    _formKey.currentState?.save();
+  // void _submit() {
+  //   _formKey.currentState?.save();
 
-    if (_formKey.currentState != null && _formKey.currentState!.validate()) {
-      ref
-          .read(signInFormNotifierProvider.notifier)
-          .submit(_formKey.currentState);
-    }
-  }
+  //   if (_formKey.currentState != null && _formKey.currentState!.validate()) {
+  //     ref
+  //         .read(signInFormNotifierProvider.notifier)
+  //         .submit(_formKey.currentState);
+  //   }
+  // }
 }

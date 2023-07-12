@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:init_test_task/common/constants.dart';
 import 'package:init_test_task/common/dependency_registration.dart';
+import 'package:init_test_task/data/models/sign_in_reponse.dart';
 import 'package:init_test_task/data/network/storage.dart';
 
 final storageProvider = Provider<IStorage>(
@@ -30,10 +31,13 @@ class Storage implements IStorage {
     await _secureStorage.removeTokens();
   }
 
+  Future<void> _storeToken(String token) async {
+    await _secureStorage.setToken(token);
+  }
+
   @override
-  Future<void> storeTokenData(data) {
-    // TODO: implement storeTokenData
-    throw UnimplementedError();
+  Future<void> storeTokenData(SignInResponse data) async {
+    await _storeToken(data.token);
   }
 }
 
@@ -49,5 +53,9 @@ extension SecureStorageExtensions on FlutterSecureStorage {
   Future<void> removeTokens() async {
     await delete(key: SharedPreferencesKeys.refreshTokenKey);
     await delete(key: SharedPreferencesKeys.tokenKey);
+  }
+
+  Future<void> setToken(String value) async {
+    await write(key: SharedPreferencesKeys.tokenKey, value: value);
   }
 }

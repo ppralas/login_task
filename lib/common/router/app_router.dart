@@ -1,6 +1,4 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:init_test_task/presentation/home_screen.dart';
-import 'package:init_test_task/presentation/log_in_screen.dart';
 import 'package:riverpod/riverpod.dart';
 
 part 'app_router.gr.dart';

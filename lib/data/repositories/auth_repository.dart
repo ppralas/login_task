@@ -8,7 +8,7 @@ import 'package:init_test_task/data/models/log_in_request.dart';
 import 'package:init_test_task/data/models/user_response.dart';
 import 'package:init_test_task/data/network/api_client.dart';
 import 'package:init_test_task/data/network/storage.dart';
-import 'package:init_test_task/data/repositories/user_repo.dart';
+import 'package:init_test_task/data/repositories/i_auth_repository.dart';
 import 'package:init_test_task/data/storage/storage.dart';
 import 'package:init_test_task/domain/network_failure.dart';
 

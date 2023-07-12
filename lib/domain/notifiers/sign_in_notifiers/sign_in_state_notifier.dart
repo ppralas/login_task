@@ -1,7 +1,7 @@
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:init_test_task/common/authentication_notifier.dart';
 import 'package:init_test_task/data/repositories/auth_repository.dart';
-import 'package:init_test_task/data/repositories/user_repo.dart';
+import 'package:init_test_task/data/repositories/i_auth_repository.dart';
 
 import 'package:init_test_task/domain/notifiers/sign_in_notifiers/sign_in_state.dart';
 import 'package:riverpod/riverpod.dart';
@@ -28,8 +28,8 @@ class SignInFormNotifier extends StateNotifier<SignInState> {
       password: formState?.value['password'] ?? '',
     );
     result.fold(
-      (l) => state = SignInState.failure(l),
-      (r) async => _authenticationNotifier.checkAuthentication(),
+      (left) => state = SignInState.failure(left),
+      (right) async => _authenticationNotifier.checkAuthentication(),
     );
   }
 }

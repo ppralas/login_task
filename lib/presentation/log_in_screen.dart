@@ -1,19 +1,24 @@
 import 'dart:developer';
 
+import 'package:auto_route/auto_route.dart';
+import 'package:auto_route_generator/builder.dart';
+import 'package:auto_route_generator/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:init_test_task/common/router/app_router.dart';
 import 'package:init_test_task/domain/notifiers/sign_in_notifiers/sign_in_state_notifier.dart';
 
-class LoginPageState extends ConsumerStatefulWidget {
-  const LoginPageState({Key? key}) : super(key: key);
+@RoutePage()
+class LoginPage extends ConsumerStatefulWidget {
+  const LoginPage({Key? key}) : super(key: key);
 
   @override
   LoginPageStateState createState() => LoginPageStateState();
 }
 
-class LoginPageStateState extends ConsumerState<LoginPageState> {
+class LoginPageStateState extends ConsumerState<LoginPage> {
   final AutovalidateMode _validateMode = AutovalidateMode.disabled;
   final _formKey = GlobalKey<FormBuilderState>();
   String email = '';
@@ -26,55 +31,57 @@ class LoginPageStateState extends ConsumerState<LoginPageState> {
         title: const Text('Login Screen'),
       ),
       body: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(
-                  left: 16.0,
-                  right: 16.0,
-                ),
-                child: FormBuilder(
-                  key: _formKey,
-                  autovalidateMode: _validateMode,
-                  child: Column(
-                    children: [
-                      FormBuilderTextField(
-                        name: email,
-                        autofillHints: const [AutofillHints.email],
-                        onSubmitted: (value) => _submit(),
-                        validator: FormBuilderValidators.email(),
-                        decoration: const InputDecoration(
-                          hintText: 'Email',
-                        ),
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(
+                left: 16.0,
+                right: 16.0,
+              ),
+              child: FormBuilder(
+                key: _formKey,
+                autovalidateMode: _validateMode,
+                child: Column(
+                  children: [
+                    FormBuilderTextField(
+                      name: email,
+                      autofillHints: const [AutofillHints.email],
+                      onSubmitted: (value) => _submit(),
+                      validator: FormBuilderValidators.email(),
+                      decoration: const InputDecoration(
+                        hintText: 'Email',
                       ),
-                      FormBuilderTextField(
-                        obscureText: true,
-                        autofillHints: const [AutofillHints.password],
-                        name: password,
-                        onSubmitted: (value) => _submit(),
-                        validator: FormBuilderValidators.required(),
-                        decoration: const InputDecoration(
-                          hintText: 'Password',
-                        ),
+                    ),
+                    FormBuilderTextField(
+                      obscureText: true,
+                      autofillHints: const [AutofillHints.password],
+                      name: password,
+                      onSubmitted: (value) => _submit(),
+                      validator: FormBuilderValidators.required(),
+                      decoration: const InputDecoration(
+                        hintText: 'Password',
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 36.0),
-                        child: ElevatedButton(
-                          onPressed: () {
-                            ref.read(signInFormNotifierProvider.notifier);
-                            log(signInFormNotifierProvider.notifier.toString());
-                          },
-                          child: const Text('Login'),
-                        ),
-                      )
-                    ],
-                  ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 48.0),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          ref.read(signInFormNotifierProvider.notifier);
+                          ref.read(appRouterProvider);
+                          log(signInFormNotifierProvider.toString());
+                        },
+                        child: const Text('Login'),
+                      ),
+                    )
+                  ],
                 ),
               ),
-            ],
-          )),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -98,6 +105,7 @@ class LoginPageStateState extends ConsumerState<LoginPageState> {
   //   }
   //   return null;
   // }
+
   void _submit() {
     _formKey.currentState?.save();
 

@@ -1,13 +1,10 @@
 import 'dart:developer';
 
 import 'package:auto_route/auto_route.dart';
-import 'package:auto_route_generator/builder.dart';
-import 'package:auto_route_generator/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:init_test_task/common/router/app_router.dart';
 import 'package:init_test_task/domain/notifiers/sign_in_notifiers/sign_in_state_notifier.dart';
 
 @RoutePage()
@@ -68,8 +65,9 @@ class LoginPageStateState extends ConsumerState<LoginPage> {
                       padding: const EdgeInsets.only(top: 48.0),
                       child: ElevatedButton(
                         onPressed: () {
+                          AutoRouter.of(context).pop();
                           ref.read(signInFormNotifierProvider.notifier);
-                          ref.read(appRouterProvider);
+
                           log(signInFormNotifierProvider.toString());
                         },
                         child: const Text('Login'),

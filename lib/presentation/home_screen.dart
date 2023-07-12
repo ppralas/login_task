@@ -1,15 +1,40 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:auto_route_generator/builder.dart';
-import 'package:auto_route_generator/utils.dart';
+import 'package:init_test_task/data/models/user_response.dart';
+import 'package:init_test_task/domain/notifiers/user_notifiers/user_state_notifier.dart';
 
 @RoutePage()
 class HomePage extends ConsumerWidget {
-  const HomePage({super.key});
+  final UserResponse user;
+
+  const HomePage(this.user, {super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Container();
+    final user = ref.watch(userValueProvider);
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('First page'),
+      ),
+      body: Column(
+        children: [
+          Row(
+            children: [
+              Text(user.maybeWhen(
+                orElse: () => 'error',
+                loaded: (user) => user.firstName,
+              )),
+              Text(
+                user.maybeWhen(
+                  orElse: () => 'error',
+                  loaded: (user) => user.lastName,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 }
